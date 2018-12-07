@@ -1,0 +1,126 @@
+%%
+%% Author: Simon Thelen (local)
+%% 12/7/2018
+%%
+
+% Preamble
+\documentclass[a4paper, 11pt]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+
+
+% More Preamble
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true}
+\title{AD -- Übungsblatt 10}
+\author{Simon Thelen}
+
+% Document
+\begin{document}
+
+    \maketitle
+
+    \section*{Aufgabe 2}
+    \subsubsection*{Naive Search}
+    \begin{lstlisting}
+        ALGORITHMEN UND DATENSTRUKTUREN
+        D..............................
+        .D.............................
+        ..D............................
+        ...D...........................
+        ....D..........................
+        .....D.........................
+        ......D........................
+        .......D.......................
+        ........D......................
+        .........D.....................
+        ..........D....................
+        ...........D...................
+        ............D..................
+        .............D.................
+        ..............DA...............
+        ...............D...............
+        ................DATEN..........
+        .................D.............
+        ..................D............
+        ...................D...........
+        ....................D..........
+        .....................D.........
+        ......................D........
+        .......................D.......
+        ........................D......
+        .........................D.....
+        ..........................D....
+        ...........................D...
+        ............................D..
+        .............................D.
+        ..............................D
+    \end{lstlisting}
+
+    \subsubsection*{Boyer Morre Search}
+    \begin{lstlisting}
+        ALGORITHMEN UND DATENSTRUKTUREN
+        ----N..........................
+        .....----N.....................
+        ......--TEN....................
+        .........----N.................
+        .............----N.............
+        ................DATEN..........
+        .................----N.........
+        ......................----T....
+        ........................----N..
+    \end{lstlisting}
+
+
+    \section*{Aufgabe 3}
+    \newcommand{\Sig}[1]{|\Sigma|^{#1}}
+
+    Die Anzahl der Startpositionen für $P$ innerhalb des Textes sind
+    \begin{equation*}
+        n - m + 1
+        \text{.}
+    \end{equation*}
+    Gegeben sei die Zufallsvariable
+    \begin{equation*}
+        X = \text{{\glqq}Anzahl der notwendigen Vergleiche einer Startposition{\grqq}}
+        \text{.}
+    \end{equation*}
+    \begin{align*}
+        \operatorname{E}(X) &=
+        1 \cdot \left( 1 - \Sig{-1} \right) + 2 \cdot \Sig{-1} \cdot \left( 1 - \Sig{-1} \right) + 3 \cdot \Sig{-2} \cdot \left( 1 - \Sig{-1} \right) + \dots \\
+        &+ (m - 1) \cdot \Sig{-(m - 2)} \cdot \left( 1 - \Sig{-1} \right) + m \cdot \Sig{-(m - 1)} \\
+        &= 1 - \Sig{-1} + 2 \cdot \Sig{-1} - 2 \cdot \Sig{-2} + 3 \cdot \Sig{-2} - 3 \cdot \Sig{-4} + \dots \\
+        &- (m - 2) \cdot \Sig{-(m - 2)} + (m - 1) \cdot \Sig{-(m - 2)} \\
+        &- (m - 1) \cdot \Sig{-(m - 1)} + m \cdot \Sig{-(m - 1)} \\
+        &= 1 + \Sig{-1} + \Sig{-2} + \Sig{-3} + \dots + \Sig{-(m - 1)} \\
+        &= \sum_{i = 0}^{m - 1}{\Sig{-i}} = \sum_{i = 0}^{m - 1}{\left( \Sig{-1} \right)^i} = \frac{1 - \Sig{-m}}{1 - \Sig{-1}}
+    \end{align*}
+
+    \begin{align*}
+        \operatorname{E}\left( \sum_{i = 0}^{n - m}{X} \right) =
+        \sum_{i = 0}^{n - m}{\operatorname{E}\left( X \right)} =
+        (n - m + 1)\frac{1 - \Sig{-m}}{1 - \Sig{-1}} \leq 2 (n - m + 1) = \Theta(n)
+    \end{align*}
+
+    \newpage
+    \section*{Aufgabe 4}
+    \begin{enumerate}
+        \item Gehe wie bei der naiven Suche Buchstabe für Buchstabe durch den Text.
+        \item Vergleiche bei jeder Startposition $s_i$ (wie bei der naiven Suche) Buchstabe für Buchstabe Text mit Muster.
+        \begin{description}
+            \item[Fall 1 (Der erste Buchstabe stimmt nicht überein):]
+            Fahre wie üblich mit der nächsten Startposition fort.
+            \item[Fall 2 (Der $k$-te Buchstabe stimmt nicht überein, $k > 1$):]
+            \[
+                s_{i + 1} = s_i + j - 1
+            \]
+        \end{description}
+        \item Wenn $i = n - m + 1$, beende den Algorithmus.
+    \end{enumerate}
+
+\end{document}

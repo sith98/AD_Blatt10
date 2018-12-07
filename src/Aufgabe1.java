@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 class Node<T extends Comparable<T>> {
     int height;
@@ -21,7 +22,7 @@ class Node<T extends Comparable<T>> {
             next.add(node);
         }
 
-        Node<T> firstNode = null;
+        Node<T> firstNode;
         for (int i = next.size() - 1; i >= 0; i--) {
             firstNode = next.get(i);
             if (firstNode != null && firstNode.value.compareTo(value) < 0) {
@@ -29,9 +30,12 @@ class Node<T extends Comparable<T>> {
                 return;
             }
         }
+        
         for (int i = 0; i < node.height; i++) {
-            node.next.set(i, next.get(i));
-            next.set(i, node);
+            if (next.get(i) != node) {
+                node.next.set(i, next.get(i));
+                next.set(i, node);
+            }
         }
     }
 }
@@ -49,7 +53,7 @@ class SkipList<T extends Comparable<T>> {
             heads.add(node);
         }
 
-        Node<T> firstNode = null;
+        Node<T> firstNode;
         for (int i = previousHeight - 1; i >= 0; i--) {
             firstNode = heads.get(i);
             if (firstNode != null && firstNode.value.compareTo(value) < 0) {
@@ -73,9 +77,13 @@ class SkipList<T extends Comparable<T>> {
         while (node != null) {
             builder
                 .append(node.value)
-                .append(" (")
-                .append(node.height)
-                .append(")\n");
+                .append(": ")
+                .append(
+                    node.next.stream()
+                        .map(it -> it == null ? null : it.value.toString())
+                        .collect(Collectors.joining(", "))
+                )
+                .append('\n');
             node = node.next.get(0);
         }
         return builder.toString();
@@ -97,7 +105,7 @@ public class Aufgabe1 {
         SkipList<Integer> list = new SkipList<>();
         for (int number : numbers) {
             list.insert(number);
+            System.out.println(list);
         }
-        System.out.println(list);
     }
 }
